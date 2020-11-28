@@ -15,9 +15,9 @@ public:
 		return pozycja;
 	};
 
-	Animal() : pozycja(Vector2D()), kierunek(Vector2D()), predkosc(0.0) {};
-	Animal(double X, double Y, double x, double y, float s) : pozycja(Vector2D(X, Y)), kierunek(Vector2D(x, y)), predkosc(s) { 
-		pozycja.Vector2D::normalize();
+	Animal() : pozycja(Vector2D()), kierunek(Vector2D()), predkosc(0.0) {}; //to nie potrzebne
+	Animal(double X, double Y, double x, double y, float s) : pozycja(Vector2D(X, Y)), kierunek(Vector2D(x, y)), predkosc(s) {  //lepoje byloby przyjmowac wetory jako parametry
+		pozycja.Vector2D::normalize(); //po co to Vector2D::
 	};
 
 	virtual void Do() = 0;
@@ -25,8 +25,8 @@ public:
 	virtual void Show()
 	{
 		std::cout << "metoda Show klasy Animal\n";
-		std::cout << "Pozycja: " << pozycja.X << "\t" << pozycja.Y << "\n";
-		std::cout << "Kierunek: " << kierunek.X << "\t" << kierunek.Y << "\n";
+		std::cout << "Pozycja: " << pozycja.X << "\t" << pozycja.Y << "\n"; //nalezalo raczej wywoalec metode show z ector
+		std::cout << "Kierunek: " << kierunek.X << "\t" << kierunek.Y << "\n"; //jw
 		std::cout << "Predkosc: " << predkosc << "\n";
 	};
 
@@ -40,7 +40,7 @@ public:
 
 class Lion: public Animal {
 public:
-	Lion(double X, double Y, double x, double y) : Animal(X, Y, x, y, 10.0) {};
+	Lion(double X, double Y, double x, double y) : Animal(X, Y, x, y, 10.0) {}; //lepoje byloby przyjmowac wetory jako parametry
 };
 
 class Gnu: public Animal {
