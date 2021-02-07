@@ -5,13 +5,16 @@
 #include <algorithm>
 using namespace std;
 
+const bool bLeft = false;
+const bool bRight = true;
+
 typedef unsigned char Byte;
 
-Byte setBit(Byte x, unsigned int index) {
+Byte bit_set(Byte x, unsigned int index) {
 	return x | (1 << index);
 }
 
-bool getBit(Byte x, unsigned int index) {
+bool bit_get(Byte x, unsigned int index) {
 	return (x & (1 << index)) != 0;
 };
 
