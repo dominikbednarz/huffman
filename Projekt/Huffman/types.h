@@ -6,7 +6,7 @@ const bool bRight = true;
 
 typedef unsigned char Byte;
 
-// format uzytych danych // ustawienie bitu
+// ustawia konkretny bit danego bajtu
 Byte setBit(Byte x, unsigned int index);
 
 // otrzymanie bitu

@@ -1,6 +1,6 @@
 #include "types.h"
 
-// format uzytych danych // ustawienie bitu
+// ustawia konkretny bit danego bajtu
 Byte setBit(Byte x, unsigned int index) {
 	return x | (1 << index);
 }
