@@ -139,14 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="compression.cpp" />
-    <ClCompile Include="structure.cpp" />
+    <ClCompile Include="operator.cpp" />
+    <ClCompile Include="types.cpp" />
     <ClCompile Include="tree.cpp" />
     <ClCompile Include="huffman.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="compression.h" />
-    <ClInclude Include="structure.h" />
+    <ClInclude Include="operator.h" />
+    <ClInclude Include="types.h" />
     <ClInclude Include="tree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

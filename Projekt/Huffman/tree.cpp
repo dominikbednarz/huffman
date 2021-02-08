@@ -1,117 +1,155 @@
-﻿#include "structure.h"
-#include "tree.h"
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <algorithm>
-using namespace std;
+﻿#include "tree.h"
 
-// Wyzncza kod dla kazdego liscia w danym drzewie
-void tree_map(Node* root, vector<bool>* codes, vector<bool>& prefix) {
-	if (root == NULL) {
+// konstruktor
+Node::Node(Byte b, Node* l, Node* r, unsigned long c) : left(l), right(r), count(c), byte(b) {}
+
+// funkcja porownujaca
+bool Node::greaterThan(Node* a, Node* b) {
+	if (a != nullptr && b != nullptr) {
+		return a->count > b->count;
+	}
+	else if (a != nullptr) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+// funkcja porownujaca
+bool Node::lessThan(Node* a, Node* b) {
+	if (a != nullptr && b != nullptr) {
+		return a->count < b->count;
+	}
+	else if (b != nullptr) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+// usuniecie drzewa
+void Node::removeTree(Node* root) {
+	if (root == nullptr) {
+		return;
+	}
+	removeTree(root->left);
+	removeTree(root->right);
+	delete root;
+}
+
+// sprawdza czy to list
+bool Node::isLeaf() const {
+	return this->left == nullptr && this->right == nullptr;
+}
+
+// Wyznacza kod dla każdego liścia w danym drzewie
+void mapTree(Node* root, std::vector<bool>* codes, std::vector<bool>& prefix) {
+	if (root == nullptr) {
 		return;
 	}
 
-	if (root->left == NULL && root->right == NULL) {
-		// Jestesmy w lisciu. Znalezlismy kod jednego bajtu.
+	if (root->left == nullptr && root->right == nullptr) {
+		// Jesteśmy w liściu. Znaleźliśmy kod jednego bajtu.
 		codes[root->byte] = prefix;
 	}
 
-	if (root->left != NULL) {
+	if (root->left != nullptr) {
 		prefix.push_back(bLeft);
-		tree_map(root->left, codes, prefix);
+		mapTree(root->left, codes, prefix);
 		prefix.pop_back();
 	}
-	if (root->right != NULL) {
+	if (root->right != nullptr) {
 		prefix.push_back(bRight);
-		tree_map(root->right, codes, prefix);
+		mapTree(root->right, codes, prefix);
 		prefix.pop_back();
 	}
 }
 
-void tree_map(Node* root, vector<bool>* codes) {
-	vector<bool> prefiks;
-	tree_map(root, codes, prefiks);
+void mapTree(Node* root, std::vector<bool>* codes) {
+	std::vector<bool> prefiks;
+	mapTree(root, codes, prefiks);
 }
 
-// Zapisuje drzewo do strumienia danych.
-void tree_save(Node* root, ostream& output, Byte& accu, unsigned int& bit_id) {
-	if (root == NULL) {
+// Zapisuje drzewo do strumienia danych
+void saveTree(Node* root, std::ostream& output, Byte& accumulator, unsigned int& bitIndex) {
+	if (root == nullptr) {
 		return;
 	}
-	if (bit_id == 8) {
-		output.write(reinterpret_cast<char*>(&accu), sizeof(accu));
-		accu = 0;
-		bit_id = 0;
+	if (bitIndex == 8) {
+		output.write(reinterpret_cast<char*>(&accumulator), sizeof(accumulator));
+		accumulator = 0;
+		bitIndex = 0;
 	}
 	if (root->isLeaf()) {
-		accu = bit_set(accu, bit_id);
-		++bit_id;
-		if (bit_id == 8) {
-			output.write(reinterpret_cast<char*>(&accu), sizeof(accu));
-			accu = 0;
-			bit_id = 0;
+		accumulator = setBit(accumulator, bitIndex);
+		++bitIndex;
+		if (bitIndex == 8) {
+			output.write(reinterpret_cast<char*>(&accumulator), sizeof(accumulator));
+			accumulator = 0;
+			bitIndex = 0;
 		}
 		for (unsigned int i = 0; i < 8; ++i) {
-			if (bit_get(root->byte, i)) {
-				accu = bit_set(accu, bit_id);
+			if (getBit(root->byte, i)) {
+				accumulator = setBit(accumulator, bitIndex);
 			}
-			++bit_id;
-			if (bit_id == 8) {
-				output.write(reinterpret_cast<char*>(&accu), sizeof(accu));
-				accu = 0;
-				bit_id = 0;
+			++bitIndex;
+			if (bitIndex == 8) {
+				output.write(reinterpret_cast<char*>(&accumulator), sizeof(accumulator));
+				accumulator = 0;
+				bitIndex = 0;
 			}
 		}
 	}
 	else {
-		++bit_id;
-		if (bit_id == 8) {
-			output.write(reinterpret_cast<char*>(&accu), sizeof(accu));
-			accu = 0;
-			bit_id = 0;
+		++bitIndex;
+		if (bitIndex == 8) {
+			output.write(reinterpret_cast<char*>(&accumulator), sizeof(accumulator));
+			accumulator = 0;
+			bitIndex = 0;
 		}
-		tree_save(root->left, output, accu, bit_id);
-		tree_save(root->right, output, accu, bit_id);
+		saveTree(root->left, output, accumulator, bitIndex);
+		saveTree(root->right, output, accumulator, bitIndex);
 	}
 }
 
-// Wczytuje drzewo ze strumienia danych.
-bool tree_load(istream& input, Byte& accu, unsigned int& bit_id, Node* root) {
-	if (bit_id == 8) {
-		if (!input.read(reinterpret_cast<char*>(&accu), sizeof(accu))) {
+// Wczytuje drzewo ze strumienia danych
+bool loadTree(std::istream& input, Byte& accumulator, unsigned int& bitIndex, Node*& root) {
+	if (bitIndex == 8) {
+		if (!input.read(reinterpret_cast<char*>(&accumulator), sizeof(accumulator))) {
 			return false;
 		}
-		bit_id = 0;
+		bitIndex = 0;
 	}
 	root = new Node(0);
-	bool bit = bit_get(accu, bit_id);
-	++bit_id;
+	bool bit = getBit(accumulator, bitIndex);
+	++bitIndex;
 	if (bit) {
 		for (unsigned int i = 0; i < 8; ++i) {
-			if (bit_id == 8) {
-				if (!input.read(reinterpret_cast<char*>(&accu), sizeof(accu))) {
-					delete root; // chyba powinno byc Node::tree_remove(root);
-					root = NULL;
+			if (bitIndex == 8) {
+				if (!input.read(reinterpret_cast<char*>(&accumulator), sizeof(accumulator))) {
+					delete root;
+					root = nullptr;
 					return false;
 				}
-				bit_id = 0;
+				bitIndex = 0;
 			}
-			if (bit_get(accu, bit_id)) {
-				root->byte = bit_set(root->byte, i);
+			if (getBit(accumulator, bitIndex)) {
+				root->byte = setBit(root->byte, i);
 			}
-			++bit_id;
+			++bitIndex;
 		}
 	}
 	else {
-		if (!tree_load(input, accu, bit_id, root->left)) {
-			delete root; // chyba powinno byc Node::tree_remove(root);
-			root = NULL;
+		if (!loadTree(input, accumulator, bitIndex, root->left)) {
+			delete root;
+			root = nullptr;
 			return false;
 		}
-		if (!tree_load(input, accu, bit_id, root->right)) {
-			Node::tree_remove(root);
-			root = NULL;
+		if (!loadTree(input, accumulator, bitIndex, root->right)) {
+			Node::removeTree(root);
+			root = nullptr;
 			return false;
 		}
 	}
