@@ -1,18 +1,19 @@
-#include "structure.h"
+ï»¿#include "structure.h"
+#include "tree.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <algorithm>
 using namespace std;
 
-// Wyzncza kod dla ka¿dego liœcia w danym drzewie
+// Wyzncza kod dla kazdego liscia w danym drzewie
 void tree_map(Node* root, vector<bool>* codes, vector<bool>& prefix) {
 	if (root == NULL) {
 		return;
 	}
 
 	if (root->left == NULL && root->right == NULL) {
-		// Jesteœmy w liœciu. ZnaleŸliœmy kod jednego bajtu.
+		// Jestesmy w lisciu. Znalezlismy kod jednego bajtu.
 		codes[root->byte] = prefix;
 	}
 
@@ -76,7 +77,7 @@ void tree_save(Node* root, ostream& output, Byte& accu, unsigned int& bit_id) {
 }
 
 // Wczytuje drzewo ze strumienia danych.
-bool tree_load(istream& input, Byte& accu, unsigned int& bit_id, Node*& root) {
+bool tree_load(istream& input, Byte& accu, unsigned int& bit_id, Node* root) {
 	if (bit_id == 8) {
 		if (!input.read(reinterpret_cast<char*>(&accu), sizeof(accu))) {
 			return false;
@@ -90,7 +91,7 @@ bool tree_load(istream& input, Byte& accu, unsigned int& bit_id, Node*& root) {
 		for (unsigned int i = 0; i < 8; ++i) {
 			if (bit_id == 8) {
 				if (!input.read(reinterpret_cast<char*>(&accu), sizeof(accu))) {
-					delete root;
+					delete root; // chyba powinno byc Node::tree_remove(root);
 					root = NULL;
 					return false;
 				}
@@ -104,7 +105,7 @@ bool tree_load(istream& input, Byte& accu, unsigned int& bit_id, Node*& root) {
 	}
 	else {
 		if (!tree_load(input, accu, bit_id, root->left)) {
-			delete root;
+			delete root; // chyba powinno byc Node::tree_remove(root);
 			root = NULL;
 			return false;
 		}

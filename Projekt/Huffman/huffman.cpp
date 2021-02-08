@@ -1,4 +1,4 @@
-#include "structure.h"
+#include "compression.h"
 #include <iostream>
 #include <fstream>
 #include <vector>

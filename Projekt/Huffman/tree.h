@@ -1,11 +1,17 @@
-#pragma once
+#ifndef TREE_H
+#define TREE_H
+
+#include <vector>
+#include <iostream>
+
 #include "structure.h"
-using namespace std;
 
-void tree_map(Node* root, vector<bool>* codes, vector<bool>& prefix);
+void tree_map(Node* root, std::vector<bool>* codes, std::vector<bool>& prefix);
 
-void tree_map(Node* root, vector<bool>* codes);
+void tree_map(Node* root, std::vector<bool>* codes);
 
-void tree_save(Node* root, ostream& output, Byte& accu, unsigned int& bit_id);
+void tree_save(Node* root, std::ostream& output, Byte& accu, unsigned int& bit_id);
 
-bool tree_load(istream& input, Byte& accu, unsigned int& bit_id, Node*& root);
+bool tree_load(std::istream& input, Byte& accu, unsigned int& bit_id, Node* root);
+
+#endif
