@@ -1,5 +1,0 @@
-﻿  main.cpp
-c:\users\domin\source\repos\3331f9bb-gr02-repo\lab1\lab1\lab1\main.cpp(5): error C2059: błąd składniowy: „;”
-c:\users\domin\source\repos\3331f9bb-gr02-repo\lab1\lab1\lab1\main.cpp(7): error C2059: błąd składniowy: „return”
-c:\users\domin\source\repos\3331f9bb-gr02-repo\lab1\lab1\lab1\main.cpp(8): error C2059: błąd składniowy: „}”
-c:\users\domin\source\repos\3331f9bb-gr02-repo\lab1\lab1\lab1\main.cpp(8): error C2143: błąd składniowy: brakuje „;” przed „}”
