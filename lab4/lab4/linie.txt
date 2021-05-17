@@ -1,9 +1,0 @@
-LINIA 8
-Rynek
-Damrota
-Rynek
-Damrota
-LINIA 845
-Andrzeja
-Rynek
-Dworzec
